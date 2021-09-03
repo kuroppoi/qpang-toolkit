@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'de.javagl:obj:0.3.0'
+    implementation 'org.joml:joml:1.10.1'
+    implementation project(':qtoolkit-shared')
+}
