@@ -25,6 +25,14 @@ public class Technique {
         ListUtils.remove(passes, index);
     }
     
+    public Pass getPass(int index) {
+        return ListUtils.get(passes, index);
+    }
+    
+    public int getPassCount() {
+        return passes.size();
+    }
+    
     public List<Pass> getPasses() {
         return passes;
     }

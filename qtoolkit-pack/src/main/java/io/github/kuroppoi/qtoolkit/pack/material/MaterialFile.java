@@ -37,6 +37,10 @@ public class MaterialFile {
         return ListUtils.get(materials, material -> name.equals(material.getName()));
     }
     
+    public int getMaterialCount() {
+        return materials.size();
+    }
+    
     public List<Material> getMaterials() {
         return materials;
     }

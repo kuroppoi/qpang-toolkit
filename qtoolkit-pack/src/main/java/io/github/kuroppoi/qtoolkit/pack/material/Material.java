@@ -35,6 +35,14 @@ public class Material {
         ListUtils.remove(techniques, index);
     }
     
+    public Technique getTechnique(int index) {
+        return ListUtils.get(techniques, index);
+    }
+    
+    public int getTechniqueCount() {
+        return techniques.size();
+    }
+    
     public List<Technique> getTechniques() {
         return techniques;
     }

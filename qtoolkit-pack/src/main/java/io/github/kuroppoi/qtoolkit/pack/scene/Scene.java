@@ -61,6 +61,10 @@ public class Scene extends Transformable {
         return ListUtils.get(meshObjects, meshObject -> name.equals(meshObject.getName()));
     }
     
+    public int getMeshObjectCount() {
+        return meshObjects.size();
+    }
+    
     public List<MeshObject> getMeshObjects() {
         return meshObjects;
     }

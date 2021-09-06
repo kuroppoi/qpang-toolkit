@@ -25,6 +25,14 @@ public class Pass {
         ListUtils.remove(textures, index);
     }
     
+    public Texture getTexture(int index) {
+        return ListUtils.get(textures, index);
+    }
+    
+    public int getTextureCount() {
+        return textures.size();
+    }
+    
     public List<Texture> getTextures() {
         return textures;
     }

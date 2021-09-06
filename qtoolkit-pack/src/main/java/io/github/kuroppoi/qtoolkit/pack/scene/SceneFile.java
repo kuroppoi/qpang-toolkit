@@ -33,6 +33,10 @@ public class SceneFile {
         return ListUtils.get(scenes, scene -> name.equals(scene.getName()));
     }
     
+    public int getSceneCount() {
+        return scenes.size();
+    }
+    
     public List<Scene> getScenes() {
         return scenes;
     }

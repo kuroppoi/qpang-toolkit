@@ -39,6 +39,10 @@ public class MeshObject extends Transformable {
         return ListUtils.get(meshes, index);
     }
     
+    public int getMeshCount() {
+        return meshes.size();
+    }
+    
     public List<String> getMeshes() {
         return meshes;
     }
