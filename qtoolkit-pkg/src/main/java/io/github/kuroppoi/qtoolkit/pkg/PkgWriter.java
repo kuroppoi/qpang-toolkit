@@ -1,8 +1,9 @@
 package io.github.kuroppoi.qtoolkit.pkg;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.OutputStream;
 
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
 import io.github.kuroppoi.qtoolkit.shared.file.DirectoryNode;
@@ -10,18 +11,23 @@ import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class PkgWriter {
     
-    public static byte[] writePkgFile(DirectoryNode root) {
-        DataBuffer buffer = new DataBuffer();
-        writePkgFile(buffer, root);
-        return buffer.readBytes(0, buffer.position());
+    public static void writePkgFile(DirectoryNode root, OutputStream outputStream) throws IOException {
+        outputStream.write(writePkgFile(root));
+        outputStream.flush();
+    }
+    
+    public static void writePkgFile(DirectoryNode root, File output) throws IOException {
+        writePkgFile(root, new FileOutputStream(output));
     }
     
     public static void writePkgFile(DirectoryNode root, FileNode output) {
         output.setBytes(writePkgFile(root));
     }
     
-    public static void writePkgFile(DirectoryNode root, File output) throws IOException {
-        Files.write(output.toPath(), writePkgFile(root));
+    public static byte[] writePkgFile(DirectoryNode root) {
+        DataBuffer buffer = new DataBuffer();
+        writePkgFile(buffer, root);
+        return buffer.readBytes(0, buffer.position());
     }
     
     private static void writePkgFile(DataBuffer buffer, DirectoryNode root) {

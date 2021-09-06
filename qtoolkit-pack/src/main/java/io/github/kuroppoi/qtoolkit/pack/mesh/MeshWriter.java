@@ -9,8 +9,9 @@ import static io.github.kuroppoi.qtoolkit.pack.mesh.VertexElementType.VET_FLOAT2
 import static io.github.kuroppoi.qtoolkit.pack.mesh.VertexElementType.VET_FLOAT3;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.OutputStream;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -21,18 +22,22 @@ import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class MeshWriter {
     
-    public static byte[] writeMeshFile(MeshFile meshFile) {
-        DataBuffer buffer = new DataBuffer();
-        writeMeshFile(buffer, meshFile);
-        return buffer.readBytes(0, buffer.position());
+    public static void writeMeshFile(MeshFile meshFile, OutputStream outputStream) throws IOException {
+        outputStream.write(writeMeshFile(meshFile));
+    }
+    
+    public static void writeMeshFile(MeshFile meshFile, File output) throws IOException {
+        writeMeshFile(meshFile, new FileOutputStream(output));
     }
     
     public static void writeMeshFile(MeshFile meshFile, FileNode output) {
         output.setBytes(writeMeshFile(meshFile));
     }
     
-    public static void writeMeshFile(MeshFile meshFile, File output) throws IOException {
-        Files.write(output.toPath(), writeMeshFile(meshFile));
+    public static byte[] writeMeshFile(MeshFile meshFile) {
+        DataBuffer buffer = new DataBuffer();
+        writeMeshFile(buffer, meshFile);
+        return buffer.readBytes(0, buffer.position());
     }
     
     private static void writeMeshFile(DataBuffer buffer, MeshFile meshFile) {

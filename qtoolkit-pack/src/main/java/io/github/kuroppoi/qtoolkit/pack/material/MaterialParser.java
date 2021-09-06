@@ -1,21 +1,33 @@
 package io.github.kuroppoi.qtoolkit.pack.material;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 
+import io.github.kuroppoi.qtoolkit.shared.IOUtils;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class MaterialParser {
     
-    public static MaterialFile parseMaterialFile(FileNode file) throws IOException {
-        return parseMaterialFile(file.getLines());
+    public static MaterialFile parseMaterialFile(Reader reader) throws IOException {
+        return parseMaterialFile(IOUtils.readAllLines(reader));
+    }
+    
+    public static MaterialFile parseMaterialFile(InputStream inputStream) throws IOException {
+        return parseMaterialFile(new InputStreamReader(inputStream));
     }
     
     public static MaterialFile parseMaterialFile(File file) throws IOException {
-        return parseMaterialFile(Files.readAllLines(file.toPath()));
+        return parseMaterialFile(new FileInputStream(file));
+    }
+    
+    public static MaterialFile parseMaterialFile(FileNode file) throws IOException {
+        return parseMaterialFile(file.getLines());
     }
     
     public static MaterialFile parseMaterialFile(List<String> lines) {

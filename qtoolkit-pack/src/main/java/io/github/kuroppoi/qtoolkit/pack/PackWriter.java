@@ -3,8 +3,9 @@ package io.github.kuroppoi.qtoolkit.pack;
 import static java.nio.charset.StandardCharsets.UTF_16LE;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.OutputStream;
 
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
 import io.github.kuroppoi.qtoolkit.shared.file.DirectoryNode;
@@ -12,14 +13,18 @@ import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class PackWriter {
     
+    public static void writePackFile(DirectoryNode root, OutputStream outputStream) throws IOException {
+        outputStream.write(writePackFile(root));
+    }
+    
+    public static void writePackFile(DirectoryNode root, File outputFile) throws IOException {
+        writePackFile(root, new FileOutputStream(outputFile));
+    }
+    
     public static byte[] writePackFile(DirectoryNode root) {
         DataBuffer buffer = new DataBuffer(Integer.MAX_VALUE / 8);
         writePackFile(buffer, root);
         return buffer.readBytes(0, buffer.position());
-    }
-    
-    public static void writePackFile(DirectoryNode root, File outputFile) throws IOException {
-        Files.write(outputFile.toPath(), writePackFile(root));
     }
     
     private static void writePackFile(DataBuffer buffer, DirectoryNode root) {

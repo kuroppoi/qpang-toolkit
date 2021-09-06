@@ -1,8 +1,9 @@
 package io.github.kuroppoi.qtoolkit.pack.collision;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,18 +15,23 @@ import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class CollisionWriter {
     
-    public static byte[] writeCollisionFile(CollisionFile collisionFile) {
-        DataBuffer buffer = new DataBuffer();
-        writeCollisionFile(buffer, collisionFile);
-        return buffer.readBytes(0, buffer.position());
+    public static void writeCollisionFile(CollisionFile collisionFile, OutputStream outputStream) throws IOException {
+        outputStream.write(writeCollisionFile(collisionFile));
+        outputStream.flush();
+    }
+    
+    public static void writeCollisionFile(CollisionFile collisionFile, File output) throws IOException {
+        writeCollisionFile(collisionFile, new FileOutputStream(output));
     }
     
     public static void writeCollisionFile(CollisionFile collisionFile, FileNode output) {
         output.setBytes(writeCollisionFile(collisionFile));
     }
     
-    public static void writeCollisionFile(CollisionFile collisionFile, File output) throws IOException {
-        Files.write(output.toPath(), writeCollisionFile(collisionFile));
+    public static byte[] writeCollisionFile(CollisionFile collisionFile) {
+        DataBuffer buffer = new DataBuffer();
+        writeCollisionFile(buffer, collisionFile);
+        return buffer.readBytes(0, buffer.position());
     }
     
     private static void writeCollisionFile(DataBuffer buffer, CollisionFile collisionFile) {

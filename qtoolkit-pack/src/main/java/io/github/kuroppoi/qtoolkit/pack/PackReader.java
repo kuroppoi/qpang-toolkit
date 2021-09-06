@@ -3,23 +3,29 @@ package io.github.kuroppoi.qtoolkit.pack;
 import static java.nio.charset.StandardCharsets.UTF_16LE;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
+import io.github.kuroppoi.qtoolkit.shared.IOUtils;
 import io.github.kuroppoi.qtoolkit.shared.file.DirectoryNode;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class PackReader {
     
-    public static DirectoryNode readPackFile(byte[] bytes) {
-        return readPackFile(new DataBuffer(bytes));
+    public static DirectoryNode readPackFile(InputStream inputStream) throws IOException {
+        return readPackFile(IOUtils.readAllBytes(inputStream));
     }
     
     public static DirectoryNode readPackFile(File file) throws IOException {
-        return readPackFile(Files.readAllBytes(file.toPath()));
+        return readPackFile(new FileInputStream(file));
+    }
+    
+    public static DirectoryNode readPackFile(byte[] bytes) {
+        return readPackFile(new DataBuffer(bytes));
     }
     
     private static DirectoryNode readPackFile(DataBuffer buffer) {

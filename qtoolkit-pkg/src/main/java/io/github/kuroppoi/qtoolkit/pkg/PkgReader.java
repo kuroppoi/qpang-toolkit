@@ -1,25 +1,31 @@
 package io.github.kuroppoi.qtoolkit.pkg;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
+import io.github.kuroppoi.qtoolkit.shared.IOUtils;
 import io.github.kuroppoi.qtoolkit.shared.file.DirectoryNode;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class PkgReader {
     
-    public static DirectoryNode readPkgFile(byte[] bytes) {
-        return readPkgFile(new DataBuffer(bytes));
+    public static DirectoryNode readPkgFile(InputStream inputStream) throws IOException {
+        return readPkgFile(IOUtils.readAllBytes(inputStream));
+    }
+    
+    public static DirectoryNode readPkgFile(File file) throws IOException {
+        return readPkgFile(new FileInputStream(file));
     }
     
     public static DirectoryNode readPkgFile(FileNode file) throws IOException {
         return readPkgFile(file.getBytes());
     }
     
-    public static DirectoryNode readPkgFile(File file) throws IOException {
-        return readPkgFile(Files.readAllBytes(file.toPath()));
+    public static DirectoryNode readPkgFile(byte[] bytes) {
+        return readPkgFile(new DataBuffer(bytes));
     }
     
     private static DirectoryNode readPkgFile(DataBuffer buffer) {

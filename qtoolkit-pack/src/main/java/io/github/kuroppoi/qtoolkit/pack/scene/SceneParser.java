@@ -1,24 +1,36 @@
 package io.github.kuroppoi.qtoolkit.pack.scene;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import io.github.kuroppoi.qtoolkit.shared.IOUtils;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class SceneParser {
     
-    public static SceneFile parseSceneFile(FileNode file) throws IOException {
-        return parseSceneFile(file.getLines());
+    public static SceneFile parseSceneFile(Reader reader) throws IOException {
+        return parseSceneFile(IOUtils.readAllLines(reader));
+    }
+    
+    public static SceneFile parseSceneFile(InputStream inputStream) throws IOException {
+        return parseSceneFile(new InputStreamReader(inputStream));
     }
     
     public static SceneFile parseSceneFile(File file) throws IOException {
-        return parseSceneFile(Files.readAllLines(file.toPath()));
+        return parseSceneFile(new FileInputStream(file));
+    }
+    
+    public static SceneFile parseSceneFile(FileNode file) throws IOException {
+        return parseSceneFile(file.getLines());
     }
     
     public static SceneFile parseSceneFile(List<String> lines) {

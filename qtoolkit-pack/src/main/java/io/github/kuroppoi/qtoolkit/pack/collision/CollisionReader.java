@@ -1,26 +1,32 @@
 package io.github.kuroppoi.qtoolkit.pack.collision;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 
 import org.joml.Vector3f;
 
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
+import io.github.kuroppoi.qtoolkit.shared.IOUtils;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
 
 public class CollisionReader {
     
-    public static CollisionFile readCollisionFile(byte[] bytes) {
-        return readCollisionFile(new DataBuffer(bytes));
+    public static CollisionFile readCollisionFile(InputStream inputStream) throws IOException {
+        return readCollisionFile(IOUtils.readAllBytes(inputStream));
+    }
+    
+    public static CollisionFile readCollisionFile(File file) throws IOException {
+        return readCollisionFile(new FileInputStream(file));
     }
     
     public static CollisionFile readCollisionFile(FileNode file) {
         return readCollisionFile(file.getBytes());
     }
     
-    public static CollisionFile readCollisionFile(File file) throws IOException {
-        return readCollisionFile(Files.readAllBytes(file.toPath()));
+    public static CollisionFile readCollisionFile(byte[] bytes) {
+        return readCollisionFile(new DataBuffer(bytes));
     }
     
     private static CollisionFile readCollisionFile(DataBuffer buffer) {
