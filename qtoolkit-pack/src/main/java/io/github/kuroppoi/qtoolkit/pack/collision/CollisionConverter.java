@@ -35,10 +35,10 @@ public class CollisionConverter {
             Vector3f pointA = polygon.getPointA();
             Vector3f pointB = polygon.getPointB();
             Vector3f pointC = polygon.getPointC();
-            obj.addVertex(pointA.x, pointA.y, pointA.z);
-            obj.addVertex(pointB.x, pointB.y, pointB.z);
-            obj.addVertex(pointC.x, pointC.y, pointC.z);
-            obj.addFace(index, index + 2, index + 1);
+            obj.addVertex(pointA.x, pointA.y, -pointA.z);
+            obj.addVertex(pointB.x, pointB.y, -pointB.z);
+            obj.addVertex(pointC.x, pointC.y, -pointC.z);
+            obj.addFace(index, index + 1, index + 2);
             index += 3;
         }
         
@@ -63,11 +63,11 @@ public class CollisionConverter {
         
         for(int i = 0; i < indices.length / 3; i++) {
             int a = indices[i * 3];
-            int b = indices[i * 3 + 2];
-            int c = indices[i * 3 + 1];
-            Vector3f pointA = new Vector3f(vertices[a * 3], vertices[a * 3 + 1], vertices[a * 3 + 2]);
-            Vector3f pointB = new Vector3f(vertices[b * 3], vertices[b * 3 + 1], vertices[b * 3 + 2]);
-            Vector3f pointC = new Vector3f(vertices[c * 3], vertices[c * 3 + 1], vertices[c * 3 + 2]);
+            int b = indices[i * 3 + 1];
+            int c = indices[i * 3 + 2];
+            Vector3f pointA = new Vector3f(vertices[a * 3], vertices[a * 3 + 1], -vertices[a * 3 + 2]);
+            Vector3f pointB = new Vector3f(vertices[b * 3], vertices[b * 3 + 1], -vertices[b * 3 + 2]);
+            Vector3f pointC = new Vector3f(vertices[c * 3], vertices[c * 3 + 1], -vertices[c * 3 + 2]);
             collision.addPolygon(new Polygon(pointA, pointB, pointC));
         }
         

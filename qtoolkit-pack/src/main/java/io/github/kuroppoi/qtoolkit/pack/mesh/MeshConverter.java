@@ -74,7 +74,7 @@ public class MeshConverter {
                     position = position.mulPosition(transformation, new Vector3f());
                 }
                 
-                obj.addVertex(position.x, position.y, position.z);
+                obj.addVertex(position.x, position.y, -position.z);
             }
             
             for(Vector3f normal : vertexData.getNormals()) {
@@ -87,8 +87,8 @@ public class MeshConverter {
             
             for(int i = 0; i + 2 < subMesh.getIndexCount(); i += 2) {
                 int x = subMesh.getIndex(i) + indexOffset;
-                int y = subMesh.getIndex(i + 1) + indexOffset;
-                int z = subMesh.getIndex(i + 2) + indexOffset;
+                int y = subMesh.getIndex(i + 2) + indexOffset;
+                int z = subMesh.getIndex(i + 1) + indexOffset;
 
                 if(x != y && x != z && y != z) {
                     int[] v = vertexData.hasPositions() ? new int[] { x, y, z } : null;
@@ -99,8 +99,8 @@ public class MeshConverter {
                 
                 if(i + 3 < subMesh.getIndexCount()) {
                     x = subMesh.getIndex(i + 1) + indexOffset;
-                    y = subMesh.getIndex(i + 3) + indexOffset;
-                    z = subMesh.getIndex(i + 2) + indexOffset;
+                    y = subMesh.getIndex(i + 2) + indexOffset;
+                    z = subMesh.getIndex(i + 3) + indexOffset;
                     
                     if(x != y && x != z && y != z) {
                         int[] v = vertexData.hasPositions() ? new int[] { x, y, z } : null;
@@ -145,7 +145,7 @@ public class MeshConverter {
             int[] indices = ObjData.getFaceVertexIndicesArray(obj2, 3);
             
             for(int i = 0; i < vertices.length / 3; i++) {
-                vertexData.addPosition(vertices[i * 3], vertices[i * 3 + 1], vertices[i * 3 + 2]);
+                vertexData.addPosition(vertices[i * 3], vertices[i * 3 + 1], -vertices[i * 3 + 2]);
             }
             
             for(int i = 0; i < normals.length / 3; i++) {
@@ -159,7 +159,7 @@ public class MeshConverter {
             
             // TODO This works, but it is not ideal.
             for(int i = 0; i < indices.length; i += 3) {
-                int bOffset = i % 2 == 0 ? 2 : 1;
+                int bOffset = i % 2 == 0 ? 1 : 2;
                 int cOffset = bOffset == 2 ? 1 : 2;
                 subMesh.addIndex(indices[i]);
                 subMesh.addIndex(indices[i]);
