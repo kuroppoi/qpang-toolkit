@@ -9,10 +9,12 @@ public class MeshObject extends Transformable {
     
     private String name;
     private final List<String> meshes;
+    private final List<MeshObject> meshObjects;
     
     public MeshObject(String name) {
         this.name = name;
         this.meshes = new ArrayList<>();
+        this.meshObjects = new ArrayList<>();
     }
     
     public void setName(String name) {
@@ -45,5 +47,37 @@ public class MeshObject extends Transformable {
     
     public List<String> getMeshes() {
         return meshes;
+    }
+    
+    public void addMeshObject(MeshObject meshObject) {
+        meshObjects.add(meshObject);
+    }
+    
+    public void removeMeshObject(MeshObject meshObject) {
+        meshObjects.remove(meshObject);
+    }
+    
+    public void removeMeshObject(int index) {
+        ListUtils.remove(meshObjects, index);
+    }
+    
+    public void removeMeshObject(String name) {
+        ListUtils.remove(meshObjects, meshObject -> name.equals(meshObject.getName()));
+    }
+    
+    public MeshObject getMeshObject(int index) {
+        return ListUtils.get(meshObjects, index);
+    }
+    
+    public MeshObject getMeshObject(String name) {
+        return ListUtils.get(meshObjects, meshObject -> name.equals(meshObject.getName()));
+    }
+    
+    public int getMeshObjectCount() {
+        return meshObjects.size();
+    }
+    
+    public List<MeshObject> getMeshObjects() {
+        return meshObjects;
     }
 }

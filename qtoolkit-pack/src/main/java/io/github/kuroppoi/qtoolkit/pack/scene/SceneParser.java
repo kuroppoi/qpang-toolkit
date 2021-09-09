@@ -103,6 +103,10 @@ public class SceneParser {
                 } else if(segments[0].equals("animation")) {
                     parseDiscardNode(iterator);
                 }
+                
+                if(segments[0].equalsIgnoreCase("mesh_object")) {
+                    meshObject.addMeshObject(parseMeshObject(segments.length == 2 ? segments[1] : null, iterator));
+                }
             }
         }
         

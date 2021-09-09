@@ -31,27 +31,34 @@ public class MeshConverter {
         }
         
         for(Scene scene : sceneFile.getScenes()) {
-            Matrix4f sceneTransformation = scene.getTransformation();
+            Matrix4f transformation = scene.getCoordType() != CoordType.GLOBAL ? scene.getTransformation() : null;
             
             for(MeshObject meshObject : scene.getMeshObjects()) {
-                Matrix4f transformation = meshObject.getTransformation();
-                sceneTransformation.mul(transformation, transformation);
-                
-                for(String meshName : meshObject.getMeshes()) {
-                    obj.setActiveGroupNames(Arrays.asList(meshName));
-                    Mesh mesh = meshFile.getMesh(meshName);
-                    
-                    if(mesh != null) {
-                        if(scene.getCoordType() == CoordType.LOCAL) {
-                            convertMeshToObj(mesh, transformation, obj);
-                        } else {
-                            convertMeshToObj(mesh, null, obj);
-                        }
-                    }
-                }
+                convertMeshObjectToObj(transformation, meshObject, meshFile, obj);
             }
         }
-                
+        
+        return obj;
+    }
+    
+    private static Obj convertMeshObjectToObj(Matrix4f transformation, MeshObject meshObject, MeshFile meshFile, Obj obj) {
+        if(transformation != null) {
+            transformation = transformation.mul(meshObject.getTransformation(), new Matrix4f());
+        }
+        
+        for(String meshName : meshObject.getMeshes()) {
+            obj.setActiveGroupNames(Arrays.asList(meshName));
+            Mesh mesh = meshFile.getMesh(meshName);
+            
+            if(mesh != null) {
+                convertMeshToObj(mesh, transformation, obj);
+            }
+        }
+        
+        for(MeshObject child : meshObject.getMeshObjects()) {
+            convertMeshObjectToObj(transformation, child, meshFile, obj);
+        }
+        
         return obj;
     }
     
