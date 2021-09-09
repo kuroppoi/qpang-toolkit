@@ -1,11 +1,11 @@
 package io.github.kuroppoi.qtoolkit.pack.scene;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class SceneParser {
     }
     
     public static SceneFile parseSceneFile(File file) throws IOException {
-        return parseSceneFile(new FileInputStream(file));
+        return parseSceneFile(Files.readAllLines(file.toPath()));
     }
     
     public static SceneFile parseSceneFile(FileNode file) throws IOException {

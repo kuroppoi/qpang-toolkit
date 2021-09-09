@@ -3,9 +3,9 @@ package io.github.kuroppoi.qtoolkit.pack;
 import static java.nio.charset.StandardCharsets.UTF_16LE;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class PackReader {
     }
     
     public static DirectoryNode readPackFile(File file) throws IOException {
-        return readPackFile(new FileInputStream(file));
+        return readPackFile(Files.readAllBytes(file.toPath()));
     }
     
     public static DirectoryNode readPackFile(byte[] bytes) {

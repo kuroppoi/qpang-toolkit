@@ -9,9 +9,9 @@ import static io.github.kuroppoi.qtoolkit.pack.mesh.VertexElementType.VET_FLOAT2
 import static io.github.kuroppoi.qtoolkit.pack.mesh.VertexElementType.VET_FLOAT3;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -27,7 +27,7 @@ public class MeshWriter {
     }
     
     public static void writeMeshFile(MeshFile meshFile, File output) throws IOException {
-        writeMeshFile(meshFile, new FileOutputStream(output));
+        Files.write(output.toPath(), writeMeshFile(meshFile));
     }
     
     public static void writeMeshFile(MeshFile meshFile, FileNode output) {

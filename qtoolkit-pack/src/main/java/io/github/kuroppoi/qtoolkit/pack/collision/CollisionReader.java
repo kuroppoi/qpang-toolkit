@@ -1,9 +1,9 @@
 package io.github.kuroppoi.qtoolkit.pack.collision;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import org.joml.Vector3f;
 
@@ -18,7 +18,7 @@ public class CollisionReader {
     }
     
     public static CollisionFile readCollisionFile(File file) throws IOException {
-        return readCollisionFile(new FileInputStream(file));
+        return readCollisionFile(Files.readAllBytes(file.toPath()));
     }
     
     public static CollisionFile readCollisionFile(FileNode file) {

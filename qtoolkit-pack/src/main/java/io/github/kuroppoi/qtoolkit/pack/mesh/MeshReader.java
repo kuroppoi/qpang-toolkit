@@ -5,9 +5,9 @@ import static io.github.kuroppoi.qtoolkit.pack.mesh.VertexElementSemantic.VES_PO
 import static io.github.kuroppoi.qtoolkit.pack.mesh.VertexElementSemantic.VES_TEXTURE_COORDINATES;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
 import io.github.kuroppoi.qtoolkit.shared.IOUtils;
@@ -20,7 +20,7 @@ public class MeshReader {
     } 
     
     public static MeshFile readMeshFile(File file) throws IOException {
-        return readMeshFile(new FileInputStream(file));
+        return readMeshFile(Files.readAllBytes(file.toPath()));
     }
     
     public static MeshFile readMeshFile(FileNode file) {

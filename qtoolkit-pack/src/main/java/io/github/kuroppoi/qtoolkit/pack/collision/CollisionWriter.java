@@ -1,9 +1,9 @@
 package io.github.kuroppoi.qtoolkit.pack.collision;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +17,10 @@ public class CollisionWriter {
     
     public static void writeCollisionFile(CollisionFile collisionFile, OutputStream outputStream) throws IOException {
         outputStream.write(writeCollisionFile(collisionFile));
-        outputStream.flush();
     }
     
     public static void writeCollisionFile(CollisionFile collisionFile, File output) throws IOException {
-        writeCollisionFile(collisionFile, new FileOutputStream(output));
+        Files.write(output.toPath(), writeCollisionFile(collisionFile));
     }
     
     public static void writeCollisionFile(CollisionFile collisionFile, FileNode output) {
