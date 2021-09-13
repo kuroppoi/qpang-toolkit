@@ -26,17 +26,16 @@ public class FileSystems {
     public static void writeFileSystem(FileSystemNode node, File output) throws IOException {
         if(node.isDirectory()) {
             for(FileSystemNode child : ((DirectoryNode)node).getChildren()) {
-                writeFileSystem(child, output);
+                writeFileSystem(child, new File(output, child.getName()));
             }
         } else {
-            File file = new File(output, node.getPath());
-            File parentFile = file.getParentFile();
+            File parentFile = output.getParentFile();
             
             if(parentFile != null) {
                 parentFile.mkdirs();
             }
             
-            Files.write(file.toPath(), ((FileNode)node).getBytes());
+            Files.write(output.toPath(), ((FileNode)node).getBytes());
         }
     }
 }
