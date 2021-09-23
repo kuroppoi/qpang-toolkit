@@ -72,7 +72,9 @@ public class MeshConverter {
     
     private static Obj convertMeshToObj(Mesh mesh, Matrix4f transformation, Obj obj) {
         for(SubMesh subMesh : mesh.getSubMeshes()) {
-            int indexOffset = obj.getNumVertices();
+            int positionCount = obj.getNumVertices();
+            int normalCount = obj.getNumNormals();
+            int texCoordCount = obj.getNumTexCoords();
             VertexData vertexData = subMesh.getVertexData();
             obj.setActiveMaterialGroupName(subMesh.getMaterialName());
             
@@ -93,27 +95,27 @@ public class MeshConverter {
             }
             
             for(int i = 0; i + 2 < subMesh.getIndexCount(); i += 2) {
-                int x = subMesh.getIndex(i) + indexOffset;
-                int y = subMesh.getIndex(i + 2) + indexOffset;
-                int z = subMesh.getIndex(i + 1) + indexOffset;
+                int x = subMesh.getIndex(i);
+                int y = subMesh.getIndex(i + 2);
+                int z = subMesh.getIndex(i + 1);
 
                 if(x != y && x != z && y != z) {
-                    int[] v = vertexData.hasPositions() ? new int[] { x, y, z } : null;
-                    int[] vn = vertexData.hasNormals() ? new int[] { x, y, z } : null;
-                    int[] vt = vertexData.hasTexCoords() ? new int[] { x, y, z } : null;
-                    obj.addFace(v, vn, vt);
+                    int[] v = vertexData.hasPositions() ? new int[] { x + positionCount, y + positionCount, z + positionCount } : null;
+                    int[] vn = vertexData.hasNormals() ? new int[] { x + normalCount, y + normalCount, z + normalCount } : null;
+                    int[] vt = vertexData.hasTexCoords() ? new int[] { x + texCoordCount, y + texCoordCount, z + texCoordCount } : null;
+                    obj.addFace(v, vt, vn);
                 }
                 
                 if(i + 3 < subMesh.getIndexCount()) {
-                    x = subMesh.getIndex(i + 1) + indexOffset;
-                    y = subMesh.getIndex(i + 2) + indexOffset;
-                    z = subMesh.getIndex(i + 3) + indexOffset;
+                    x = subMesh.getIndex(i + 1);
+                    y = subMesh.getIndex(i + 2);
+                    z = subMesh.getIndex(i + 3);
                     
                     if(x != y && x != z && y != z) {
-                        int[] v = vertexData.hasPositions() ? new int[] { x, y, z } : null;
-                        int[] vn = vertexData.hasNormals() ? new int[] { x, y, z } : null;
-                        int[] vt = vertexData.hasTexCoords() ? new int[] { x, y, z } : null;
-                        obj.addFace(v, vn, vt);
+                        int[] v = vertexData.hasPositions() ? new int[] { x + positionCount, y + positionCount, z + positionCount } : null;
+                        int[] vn = vertexData.hasNormals() ? new int[] { x + normalCount, y + normalCount, z + normalCount } : null;
+                        int[] vt = vertexData.hasTexCoords() ? new int[] { x + texCoordCount, y + texCoordCount, z + texCoordCount } : null;
+                        obj.addFace(v, vt, vn);
                     }
                 }
             }
