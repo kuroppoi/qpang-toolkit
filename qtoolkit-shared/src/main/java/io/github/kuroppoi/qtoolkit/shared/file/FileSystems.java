@@ -25,6 +25,8 @@ public class FileSystems {
     
     public static void writeFileSystem(FileSystemNode node, File output) throws IOException {
         if(node.isDirectory()) {
+            output.mkdirs();
+            
             for(FileSystemNode child : ((DirectoryNode)node).getChildren()) {
                 writeFileSystem(child, new File(output, child.getName()));
             }
