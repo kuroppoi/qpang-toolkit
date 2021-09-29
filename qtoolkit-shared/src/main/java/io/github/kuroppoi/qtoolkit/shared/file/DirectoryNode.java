@@ -131,7 +131,7 @@ public class DirectoryNode extends FileSystemNode {
     }
     
     public FileSystemNode getChild(String name) {
-        return ListUtils.get(children, node -> node.getName().equals(name));
+        return ListUtils.get(children, node -> node.getName().equalsIgnoreCase(name));
     }
     
     public int getChildCount() {
