@@ -1,0 +1,30 @@
+name: build
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - qtoolkit-conf/**
+      - qtoolkit-pack/**
+      - qtoolkit-pkg/**
+      - qtoolkit-shared/**
+      - src/**
+      - build.gradle
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'adopt'
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+    - name: Build with Gradle
+      run: ./gradlew build
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: qtoolkit
+        path: build/libs/**
