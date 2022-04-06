@@ -43,7 +43,7 @@ public class MeshWriter {
     private static void writeMeshFile(DataBuffer buffer, MeshFile meshFile) {
         buffer.writeInt(0);
         buffer.writeInt(0x20000); // version
-        buffer.writeInt(4);
+        buffer.writeInt(1);
         buffer.writeInt(meshFile.getMeshCount());
         buffer.writeInt(0); // length in bytes minus header
         
