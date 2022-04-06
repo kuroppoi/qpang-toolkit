@@ -5,12 +5,17 @@ import java.util.Set;
 
 public class Collision {
     
+    private final Set<Polygon> polygons = new HashSet<>();
     private String sceneName;
-    private Set<Polygon> polygons;
+    private CollisionFile parent;
     
     public Collision(String sceneName) {
         this.sceneName = sceneName;
-        this.polygons = new HashSet<>();
+    }
+    
+    @Override
+    public String toString() {
+        return sceneName;
     }
     
     public void setSceneName(String sceneName) {
@@ -19,6 +24,18 @@ public class Collision {
     
     public String getSceneName() {
         return sceneName;
+    }
+    
+    public void setParent(CollisionFile parent) {
+        this.parent = parent;
+    }
+    
+    public boolean hasParent() {
+        return parent != null;
+    }
+    
+    public CollisionFile getParent() {
+        return parent;
     }
     
     public void addPolygon(Polygon polygon) {

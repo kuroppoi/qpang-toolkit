@@ -7,9 +7,9 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class Scene extends Transformable {
     
+    private final List<MeshObject> meshObjects = new ArrayList<>();
     private String name;
     private CoordType coordType;
-    private final List<MeshObject> meshObjects;
     
     public Scene(String name) {
         this(name, CoordType.GLOBAL);
@@ -18,7 +18,6 @@ public class Scene extends Transformable {
     public Scene(String name, CoordType coordType) {
         this.name = name;
         this.coordType = coordType;
-        this.meshObjects = new ArrayList<>();
     }
     
     public void setName(String name) {

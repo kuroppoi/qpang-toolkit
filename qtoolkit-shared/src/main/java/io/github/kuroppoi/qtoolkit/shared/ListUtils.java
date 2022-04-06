@@ -7,6 +7,12 @@ import java.util.function.Predicate;
 
 public class ListUtils {
     
+    public static <T> void add(List<T> list, int index, T element) {
+        if(index >= 0 && index <= list.size()) {
+            list.add(index, element);
+        }
+    }
+    
     public static <T> T remove(List<T> list, int index) {
         if(isIndexInRange(list, index)) {
             return list.remove(index);

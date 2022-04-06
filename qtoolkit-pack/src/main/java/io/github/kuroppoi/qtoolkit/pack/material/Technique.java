@@ -7,11 +7,7 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class Technique {
     
-    private final List<Pass> passes;
-    
-    public Technique() {
-        this.passes = new ArrayList<>();
-    }
+    private final List<Pass> passes = new ArrayList<>();
     
     public void addPass(Pass pass) {
         passes.add(pass);

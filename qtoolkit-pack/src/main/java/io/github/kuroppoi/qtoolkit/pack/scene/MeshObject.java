@@ -7,14 +7,12 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class MeshObject extends Transformable {
     
+    private final List<String> meshes = new ArrayList<>();
+    private final List<MeshObject> meshObjects = new ArrayList<>();
     private String name;
-    private final List<String> meshes;
-    private final List<MeshObject> meshObjects;
     
     public MeshObject(String name) {
         this.name = name;
-        this.meshes = new ArrayList<>();
-        this.meshObjects = new ArrayList<>();
     }
     
     public void setName(String name) {

@@ -10,14 +10,18 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class Mesh {
     
+    private final List<SubMesh> subMeshes = new ArrayList<>();
     private String name;
+    private MeshFile parent;
     private float animationLength;
-    private float animationSpeed;
-    private List<SubMesh> subMeshes;
     
     public Mesh(String name) {
         this.name = name;
-        this.subMeshes = new ArrayList<>();
+    }
+    
+    @Override
+    public String toString() {
+        return name;
     }
     
     public AxisAlignedBox calculateBounds() {
@@ -44,6 +48,18 @@ public class Mesh {
         return name;
     }
     
+    protected void setParent(MeshFile parent) {
+        this.parent = parent;
+    }
+    
+    public boolean hasParent() {
+        return parent != null;
+    }
+    
+    public MeshFile getParent() {
+        return parent;
+    }
+    
     public void setAnimationLength(float animationLength) {
         this.animationLength = animationLength;
     }
@@ -52,28 +68,35 @@ public class Mesh {
         return animationLength;
     }
     
-    public void setAnimationSpeed(float animationSpeed) {
-        this.animationSpeed = animationSpeed;
-    }
-    
     public float getAnimationSpeed() {
-        return animationSpeed;
+        return animationLength / (float)getKeyFrameCount();
     }
     
     public void addSubMesh(SubMesh subMesh) {
-        subMeshes.add(subMesh);
+        addSubMesh(subMeshes.size(), subMesh);
+    }
+    
+    public void addSubMesh(int index, SubMesh subMesh) {
+        if(subMesh.hasParent()) {
+            throw new IllegalArgumentException("SubMesh already has a parent");
+        }
+        
+        ListUtils.add(subMeshes, index, subMesh);
+        subMesh.setParent(this);
     }
     
     public void removeSubMesh(SubMesh subMesh) {
-        subMeshes.remove(subMesh);
+        if(subMesh != null && subMeshes.remove(subMesh)) {
+            subMesh.setParent(null);
+        }
     }
     
     public void removeSubMesh(int index) {
-        ListUtils.remove(subMeshes, index);
+        removeSubMesh(getSubMesh(index));
     }
     
     public void removeSubMesh(String materialName) {
-        ListUtils.remove(subMeshes, subMesh -> subMesh.getMaterialName().equals(materialName));
+        removeSubMesh(getSubMesh(materialName));
     }
     
     public SubMesh getSubMesh(int index) {
@@ -82,6 +105,10 @@ public class Mesh {
     
     public SubMesh getSubMesh(String materialName) {
         return ListUtils.get(subMeshes, subMesh -> subMesh.getMaterialName().equals(materialName));
+    }
+    
+    public boolean hasSubMesh(String materialName) {
+        return getSubMesh(materialName) != null;
     }
     
     public int getSubMeshCount() {

@@ -7,11 +7,7 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class VertexElementList {
     
-    private List<VertexElement> elements;
-    
-    public VertexElementList() {
-        this.elements = new ArrayList<>();
-    }
+    private List<VertexElement> elements = new ArrayList<>();
     
     public void addElement(int byteOffset, 
             VertexElementType type,

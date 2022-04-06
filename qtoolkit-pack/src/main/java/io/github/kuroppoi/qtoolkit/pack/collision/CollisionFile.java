@@ -7,26 +7,33 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class CollisionFile {
     
-    private final List<Collision> collisions;
-    
-    public CollisionFile() {
-        this.collisions = new ArrayList<>();
-    }
+    private final List<Collision> collisions = new ArrayList<>();
     
     public void addCollision(Collision collision) {
-        collisions.add(collision);
+        addCollision(collisions.size(), collision);
+    }
+    
+    public void addCollision(int index, Collision collision) {
+        if(collision.hasParent()) {
+            throw new IllegalArgumentException("Collision already has a parent");
+        }
+        
+        ListUtils.add(collisions, index, collision);
+        collision.setParent(this);
     }
     
     public void removeCollision(Collision collision) {
-        collisions.remove(collision);
+        if(collision != null && collisions.remove(collision)) {
+            collision.setParent(null);
+        }
     }
     
     public void removeCollision(int index) {
-        ListUtils.remove(collisions, index);
+        removeCollision(getCollision(index));
     }
     
     public void removeCollision(String sceneName) {
-        ListUtils.remove(collisions, collision -> sceneName.equals(collision.getSceneName()));
+        removeCollision(getCollision(sceneName));
     }
     
     public Collision getCollision(int index) {
@@ -35,6 +42,10 @@ public class CollisionFile {
     
     public Collision getCollision(String sceneName) {
         return ListUtils.get(collisions, collision -> sceneName.equals(collision.getSceneName()));
+    }
+    
+    public boolean hasCollision(String sceneName) {
+        return getCollision(sceneName) != null;
     }
     
     public int getCollisionCount() {

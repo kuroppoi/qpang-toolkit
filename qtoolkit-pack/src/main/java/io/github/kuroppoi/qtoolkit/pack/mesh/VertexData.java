@@ -10,17 +10,10 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class VertexData {
 
-    private final List<Vector3f> positions;
-    private final List<Vector3f> normals;
-    private final List<Vector2f> texCoords;
-    private final List<Vector2f> lightMapTexCoords;
-    
-    public VertexData() {
-        this.positions = new ArrayList<>();
-        this.normals = new ArrayList<>();
-        this.texCoords = new ArrayList<>();
-        this.lightMapTexCoords = new ArrayList<>();
-    }
+    private final List<Vector3f> positions = new ArrayList<>();
+    private final List<Vector3f> normals = new ArrayList<>();
+    private final List<Vector2f> texCoords = new ArrayList<>();
+    private final List<Vector2f> lightMapTexCoords = new ArrayList<>();
     
     public void addPosition(float x, float y, float z) {
         addPosition(new Vector3f(x, y, z));

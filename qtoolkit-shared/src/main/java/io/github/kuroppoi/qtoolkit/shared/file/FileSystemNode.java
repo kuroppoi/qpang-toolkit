@@ -8,10 +8,19 @@ public abstract class FileSystemNode {
     private DirectoryNode parent;
     
     public FileSystemNode(String name) {
-        this.name = name;
+        setName(name);
+    }
+    
+    public static boolean isNameValid(String name) {
+        return name != null && !name.isEmpty() && name.equals(new File(name).getName()); // Cheesy, but eh, it works.
     }
     
     public abstract boolean isDirectory();
+    
+    @Override
+    public String toString() {
+        return name;
+    }
     
     public String getPath() {
         return getPath(File.separator);
@@ -29,7 +38,9 @@ public abstract class FileSystemNode {
     }
     
     public void setName(String name) {
-        this.name = name;
+        if(isNameValid(name)) {
+            this.name = name;
+        }
     }
     
     public String getName() {

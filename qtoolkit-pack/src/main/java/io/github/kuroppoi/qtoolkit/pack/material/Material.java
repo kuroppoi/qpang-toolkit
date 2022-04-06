@@ -7,12 +7,11 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class Material {
     
+    private final List<Technique> techniques = new ArrayList<>();
     private String name;
-    private final List<Technique> techniques;
     
     public Material(String name) {
         this.name = name;
-        this.techniques = new ArrayList<>();
     }
     
     public void setName(String name) {

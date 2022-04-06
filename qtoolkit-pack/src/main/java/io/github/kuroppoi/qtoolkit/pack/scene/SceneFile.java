@@ -7,11 +7,7 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class SceneFile {
     
-    private List<Scene> scenes;
-    
-    public SceneFile() {
-        this.scenes = new ArrayList<>();
-    }
+    private List<Scene> scenes = new ArrayList<>();
     
     public void addScene(Scene scene) {
         scenes.add(scene);

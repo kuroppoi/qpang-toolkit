@@ -56,7 +56,7 @@ public class MeshReader {
             // TODO not entirely sure how these values work yet
             buffer.readBytes(8);
             mesh.setAnimationLength(buffer.readFloat());
-            mesh.setAnimationSpeed(buffer.readFloat());
+            buffer.readFloat(); // Time in milliseconds per keyframe.
             keyFrameCount = (short)buffer.readInt() - 1;
         }
         

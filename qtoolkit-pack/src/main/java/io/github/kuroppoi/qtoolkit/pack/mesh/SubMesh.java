@@ -7,16 +7,19 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class SubMesh {
     
+    private final List<VertexData> keyFrames = new ArrayList<>();
+    private final List<Integer> indices = new ArrayList<>();
+    private VertexData vertexData = new VertexData();
     private String materialName;
-    private VertexData vertexData;
-    private List<VertexData> keyFrames;
-    private List<Integer> indices;
+    private Mesh parent;
     
     public SubMesh(String materialName) {
         this.materialName = materialName;
-        this.vertexData = new VertexData();
-        this.keyFrames = new ArrayList<>();
-        this.indices = new ArrayList<>();
+    }
+    
+    @Override
+    public String toString() {
+        return materialName;
     }
     
     public void setMaterialName(String materialName) {
@@ -25,6 +28,18 @@ public class SubMesh {
     
     public String getMaterialName() {
         return materialName;
+    }
+    
+    protected void setParent(Mesh parent) {
+        this.parent = parent;
+    }
+    
+    public boolean hasParent() {
+        return parent != null;
+    }
+    
+    public Mesh getParent() {
+        return parent;
     }
     
     public void setVertexData(VertexData vertexData) {

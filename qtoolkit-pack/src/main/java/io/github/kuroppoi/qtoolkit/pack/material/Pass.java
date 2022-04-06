@@ -7,11 +7,7 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class Pass {
     
-    private final List<Texture> textures;
-    
-    public Pass() {
-        this.textures = new ArrayList<>();
-    }
+    private final List<Texture> textures = new ArrayList<>();
     
     public void addTexture(Texture texture) {
         textures.add(texture);

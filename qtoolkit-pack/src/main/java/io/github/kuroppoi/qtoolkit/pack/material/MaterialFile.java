@@ -7,11 +7,7 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class MaterialFile {
     
-    private final List<Material> materials;
-    
-    public MaterialFile() {
-        this.materials = new ArrayList<>();
-    }
+    private final List<Material> materials = new ArrayList<>();
     
     public void addMaterial(Material material) {
         materials.add(material);

@@ -104,7 +104,7 @@ public class DirectoryNode extends FileSystemNode {
             throw new IllegalArgumentException("Node already has a parent");
         } else if(node == this) {
             throw new IllegalArgumentException("Node cannot be added to itself");
-        } else if(getChild(node.getName()) != null) {
+        } else if(hasChild(node.getName())) {
             throw new IllegalArgumentException("A node with this name already exists");
         }
         
@@ -132,6 +132,10 @@ public class DirectoryNode extends FileSystemNode {
     
     public FileSystemNode getChild(String name) {
         return ListUtils.get(children, node -> node.getName().equalsIgnoreCase(name));
+    }
+    
+    public boolean hasChild(String name) {
+        return getChild(name) != null;
     }
     
     public int getChildCount() {

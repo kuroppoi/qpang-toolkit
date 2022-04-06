@@ -7,26 +7,33 @@ import io.github.kuroppoi.qtoolkit.shared.ListUtils;
 
 public class MeshFile {
     
-    private List<Mesh> meshes;
-    
-    public MeshFile() {
-        this.meshes = new ArrayList<>();
-    }
+    private final List<Mesh> meshes = new ArrayList<>();
     
     public void addMesh(Mesh mesh) {
-        meshes.add(mesh);
+        addMesh(meshes.size(), mesh);
+    }
+    
+    public void addMesh(int index, Mesh mesh) {
+        if(mesh.hasParent()) {
+            throw new IllegalArgumentException("Mesh already has a parent");
+        }
+        
+        ListUtils.add(meshes, index, mesh);
+        mesh.setParent(this);
     }
     
     public void removeMesh(Mesh mesh) {
-        meshes.remove(mesh);
+        if(mesh != null && meshes.remove(mesh)) {
+            mesh.setParent(null);
+        }
     }
     
     public void removeMesh(int index) {
-        ListUtils.remove(meshes, index);
+        removeMesh(getMesh(index));
     }
     
     public void removeMesh(String name) {
-        ListUtils.remove(meshes, mesh -> mesh.getName().equals(name));
+        removeMesh(getMesh(name));
     }
     
     public Mesh getMesh(int index) {
@@ -35,6 +42,10 @@ public class MeshFile {
     
     public Mesh getMesh(String name) {
         return ListUtils.get(meshes, mesh -> mesh.getName().equals(name));
+    }
+    
+    public boolean hasMesh(String name) {
+        return getMesh(name) != null;
     }
     
     public int getMeshCount() {
