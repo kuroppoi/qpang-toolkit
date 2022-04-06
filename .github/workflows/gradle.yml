@@ -3,6 +3,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - .github/workflows/gradle.yml
       - conf/**
       - pack/**
       - pkg/**
