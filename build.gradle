@@ -1,0 +1,40 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.formdev:flatlaf:2.1'
+    implementation 'com.formdev:flatlaf-intellij-themes:2.1'
+    implementation 'com.formdev:flatlaf-extras:2.1'
+    implementation project(':qtoolkit-pack')
+    implementation project(':qtoolkit-pkg')
+    implementation project(':qtoolkit-conf')
+    implementation project(':qtoolkit-shared')
+}
+
+application {
+    mainClass = 'io.github.kuroppoi.qtoolkit.Main'
+}
+
+run {
+    workingDir = file('run')
+}
+
+task dist(type: Jar) {
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+	
+    dependsOn configurations.runtimeClasspath
+	
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+	
+    with jar
+}
