@@ -28,18 +28,22 @@ public class CollisionWriter {
     }
     
     public static byte[] writeCollisionFile(CollisionFile collisionFile) {
-        DataBuffer buffer = new DataBuffer();
-        writeCollisionFile(buffer, collisionFile);
+        return writeCollisionFile(generateBinarySpacePartitionTree(collisionFile));
+    }
+    
+    private static byte[] writeCollisionFile(BinarySpacePartition root) {
+        DataBuffer buffer = new DataBuffer(20 + calculateSize(root));
+        writeCollisionFile(buffer, root);
         return buffer.readBytes(0, buffer.position());
     }
     
-    private static void writeCollisionFile(DataBuffer buffer, CollisionFile collisionFile) {
+    private static void writeCollisionFile(DataBuffer buffer, BinarySpacePartition root) {
         buffer.writeInt(0);
         buffer.writeInt(1); // version, 1
         buffer.writeInt(4);
         buffer.writeInt(256);
         buffer.writeInt(0); // size in bytes minus header
-        writeBinarySpacePartition(buffer, generateBinarySpacePartitionTree(collisionFile));
+        writeBinarySpacePartition(buffer, root);
         buffer.writeInt(16, buffer.position() - 20);
     }
     
@@ -141,5 +145,19 @@ public class CollisionWriter {
         }
         
         return root;
+    }
+    
+    private static int calculateSize(BinarySpacePartition bsp) {
+        int size = 28;
+        
+        if(bsp.isLeaf()) {
+            for(Collision collision : bsp.getCollisions()) {
+                size += 68 + (collision.getPolygonCount() * 52);
+            }
+        } else {
+            size += 8 + calculateSize(bsp.getLeftChild()) + calculateSize(bsp.getRightChild());
+        }
+        
+        return size;
     }
 }

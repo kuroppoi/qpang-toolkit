@@ -35,7 +35,7 @@ public class MeshWriter {
     }
     
     public static byte[] writeMeshFile(MeshFile meshFile) {
-        DataBuffer buffer = new DataBuffer();
+        DataBuffer buffer = new DataBuffer(calculateSize(meshFile));
         writeMeshFile(buffer, meshFile);
         return buffer.readBytes(0, buffer.position());
     }
@@ -199,5 +199,67 @@ public class MeshWriter {
         elementList.addElement(offset, VET_COLOUR, VES_DIFFUSE, 0);
         
         return elementList;
+    }
+    
+    private static int calculateSize(MeshFile meshFile) {
+        int size = 20;
+        
+        for(Mesh mesh : meshFile.getMeshes()) {
+            size += 176;
+            
+            if(mesh.getKeyFrameCount() > 0) {
+                size += 20;
+            }
+            
+            for(SubMesh subMesh : mesh.getSubMeshes()) {
+                VertexData vertexData = subMesh.getVertexData();
+                size += 96 + calculateSize(vertexData) + subMesh.getIndexCount() * 2;
+                
+                if(vertexData.hasPositions()) {
+                    size += 16;
+                }
+                
+                if(vertexData.hasNormals()) {
+                    size += 16;
+                }
+                
+                if(vertexData.hasTexCoords()) {
+                    size += 16;
+                }
+                
+                if(vertexData.hasLightMapTexCoords()) {
+                    size += 16;
+                }
+                                
+                for(VertexData keyFrame : subMesh.getKeyFrames()) {
+                    size += calculateSize(keyFrame);
+                }
+            }
+        }
+        
+        return size;
+    }
+    
+    private static int calculateSize(VertexData vertexData) {
+        int vertexCount = vertexData.getVertexCount();
+        int size = 4 + vertexCount * 4; // Vertex count int + diffuse color ints
+        
+        if(vertexData.hasPositions()) {
+            size += vertexCount * 12; // 3 floats = 12 bytes
+        }
+        
+        if(vertexData.hasNormals()) {
+            size += vertexCount * 12; // 3 floats = 12 bytes
+        }
+        
+        if(vertexData.hasTexCoords()) {
+            size += vertexCount * 8; // 2 floats = 8 bytes
+        }
+        
+        if(vertexData.hasLightMapTexCoords()) {
+            size += vertexCount * 8; // 2 floats = 8 bytes
+        }
+        
+        return size;
     }
 }

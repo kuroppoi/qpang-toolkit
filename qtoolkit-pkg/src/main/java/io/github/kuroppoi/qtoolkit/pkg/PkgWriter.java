@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
 import io.github.kuroppoi.qtoolkit.shared.file.DirectoryNode;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
+import io.github.kuroppoi.qtoolkit.shared.file.FileSystemNode;
 
 public class PkgWriter {
     
@@ -25,7 +26,7 @@ public class PkgWriter {
     }
     
     public static byte[] writePkgFile(DirectoryNode root) {
-        DataBuffer buffer = new DataBuffer();
+        DataBuffer buffer = new DataBuffer(calculateSize(root));
         writePkgFile(buffer, root);
         return buffer.readBytes(0, buffer.position());
     }
@@ -60,5 +61,17 @@ public class PkgWriter {
         int offset = buffer.position() - length;
         byte[] bytes = buffer.readBytes(offset, length);
         buffer.writeBytes(offset, PkgCryptography.encryptBytes(bytes));
+    }
+    
+    private static int calculateSize(DirectoryNode root) {
+        int size = 4;
+        
+        for(FileSystemNode descendant : root.getDescendants()) {
+            if(!descendant.isDirectory()) {
+                size += 140 + ((FileNode)descendant).getSize();
+            }
+        }
+        
+        return size;
     }
 }

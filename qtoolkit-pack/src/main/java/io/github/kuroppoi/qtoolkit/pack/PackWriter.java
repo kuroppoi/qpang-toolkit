@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import io.github.kuroppoi.qtoolkit.shared.DataBuffer;
 import io.github.kuroppoi.qtoolkit.shared.file.DirectoryNode;
 import io.github.kuroppoi.qtoolkit.shared.file.FileNode;
+import io.github.kuroppoi.qtoolkit.shared.file.FileSystemNode;
 
 public class PackWriter {
     
@@ -22,7 +23,7 @@ public class PackWriter {
     }
     
     public static byte[] writePackFile(DirectoryNode root) {
-        DataBuffer buffer = new DataBuffer(Integer.MAX_VALUE / 8);
+        DataBuffer buffer = new DataBuffer(16 + calculateSize(root));
         writePackFile(buffer, root);
         return buffer.readBytes(0, buffer.position());
     }
@@ -56,5 +57,19 @@ public class PackWriter {
         
         // Gotta set the position to the end or we won't know where it is
         buffer.position(contentOffset);
+    }
+    
+    private static int calculateSize(DirectoryNode root) {
+        int size = 0;
+        
+        for(FileSystemNode node : root.getChildren()) {
+            if(node.isDirectory()) {
+                size += 132 + calculateSize((DirectoryNode)node);
+            } else {
+                size += 140 + ((FileNode)node).getSize();
+            }
+        }
+        
+        return size;
     }
 }

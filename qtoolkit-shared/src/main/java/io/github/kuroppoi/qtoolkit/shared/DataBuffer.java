@@ -9,10 +9,6 @@ public class DataBuffer {
     
     private final ByteBuffer buffer;
     
-    public DataBuffer() {
-        this(16777213); // TODO bad
-    }
-    
     public DataBuffer(int size) {
         this(ByteBuffer.allocate(size).order(ByteOrder.LITTLE_ENDIAN));
     }
