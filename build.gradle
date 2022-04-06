@@ -11,10 +11,10 @@ dependencies {
     implementation 'com.formdev:flatlaf:2.1'
     implementation 'com.formdev:flatlaf-intellij-themes:2.1'
     implementation 'com.formdev:flatlaf-extras:2.1'
-    implementation project(':qtoolkit-pack')
-    implementation project(':qtoolkit-pkg')
-    implementation project(':qtoolkit-conf')
-    implementation project(':qtoolkit-shared')
+    implementation project(':pack')
+    implementation project(':pkg')
+    implementation project(':conf')
+    implementation project(':shared')
 }
 
 application {

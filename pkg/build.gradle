@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    api project(':qtoolkit-shared')
+    api project(':shared')
 }

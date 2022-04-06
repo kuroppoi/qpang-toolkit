@@ -3,10 +3,10 @@ on:
   push:
     branches: [ master ]
     paths:
-      - qtoolkit-conf/**
-      - qtoolkit-pack/**
-      - qtoolkit-pkg/**
-      - qtoolkit-shared/**
+      - conf/**
+      - pack/**
+      - pkg/**
+      - shared/**
       - src/**
       - build.gradle
 jobs:

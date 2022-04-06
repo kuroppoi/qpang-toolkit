@@ -23,15 +23,15 @@ public class MeshReader {
         return readMeshFile(Files.readAllBytes(file.toPath()));
     }
     
-    public static MeshFile readMeshFile(FileNode file) {
+    public static MeshFile readMeshFile(FileNode file) throws IOException {
         return readMeshFile(file.getBytes());
     }
     
-    public static MeshFile readMeshFile(byte[] bytes) {
+    public static MeshFile readMeshFile(byte[] bytes) throws IOException {
         return readMeshFile(new DataBuffer(bytes));
     }
     
-    private static MeshFile readMeshFile(DataBuffer buffer) {
+    private static MeshFile readMeshFile(DataBuffer buffer) throws IOException {
         buffer.readBytes(20);
         MeshFile meshFile = new MeshFile();
         
