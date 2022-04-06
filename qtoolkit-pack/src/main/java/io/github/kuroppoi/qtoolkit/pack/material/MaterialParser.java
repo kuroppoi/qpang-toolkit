@@ -98,6 +98,8 @@ public class MaterialParser {
             } else if(segments.length > 0) {
                 if(segments[0].equalsIgnoreCase("texture")) {
                     pass.addTexture(parseTexture(iterator));
+                } else if(segments[0].equals("vertex_shader_ref")) {
+                    parseDiscardNode(iterator);
                 }
             }
         }
@@ -124,5 +126,15 @@ public class MaterialParser {
         }
         
         return texture;
+    }
+    
+    private static void parseDiscardNode(Iterator<String> iterator) {
+        while(iterator.hasNext()) {
+            String line = iterator.next().trim();
+            
+            if(line.equals("}")) {
+                break;
+            }
+        }
     }
 }
