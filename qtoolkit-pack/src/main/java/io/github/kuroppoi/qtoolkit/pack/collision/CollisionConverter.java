@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjData;
 import de.javagl.obj.ObjSplitting;
+import de.javagl.obj.ObjUtils;
 import de.javagl.obj.Objs;
 
 public class CollisionConverter {
@@ -58,6 +59,7 @@ public class CollisionConverter {
     
     public static Collision convertObjToCollision(Obj obj, String sceneName) {
         Collision collision = new Collision(sceneName);
+        obj = ObjUtils.convertToRenderable(obj);
         int[] indices = ObjData.getFaceVertexIndicesArray(obj, 3);
         float[] vertices = ObjData.getVerticesArray(obj);
         
