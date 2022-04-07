@@ -1,2 +1,2 @@
 rootProject.name = 'qtoolkit'
-include('pack', 'pkg', 'conf', 'shared')
+include('lib')

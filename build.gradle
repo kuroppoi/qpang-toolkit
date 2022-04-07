@@ -11,14 +11,11 @@ dependencies {
     implementation 'com.formdev:flatlaf:2.1'
     implementation 'com.formdev:flatlaf-intellij-themes:2.1'
     implementation 'com.formdev:flatlaf-extras:2.1'
-    implementation project(':pack')
-    implementation project(':pkg')
-    implementation project(':conf')
-    implementation project(':shared')
+    implementation project(':lib')
 }
 
 application {
-    mainClass = 'io.github.kuroppoi.qtoolkit.Main'
+    mainClass = 'io.github.kuroppoi.qtoolkit.gui.Main'
 }
 
 run {
