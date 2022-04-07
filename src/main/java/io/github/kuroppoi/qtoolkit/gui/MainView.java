@@ -84,6 +84,7 @@ public class MainView {
     private final JFrame frame;
     private JTree fileTree;
     private FlatTabbedPane fileTabs;
+    private String copiedFilePath;
     
     public MainView() {
         frame = new JFrame("QPang Toolkit :: by Kuroppoi");
@@ -214,6 +215,7 @@ public class MainView {
                     if(SwingUtilities.isRightMouseButton(event)) {
                         JPopupMenu menu = new JPopupMenu();
                         menu.add(createAddMenu(rootNode));
+                        menu.add(createPasteAction(rootNode));
                         menu.show(fileTree, x, y);
                     }
                     
@@ -235,10 +237,12 @@ public class MainView {
                         exportMenu.add(ActionHelper.createAction("Pack File (.pack)", () -> exportPackFile(directory)));
                         exportMenu.add(ActionHelper.createAction("Pkg File (.pkg)", () -> exportPkgFile(directory)));
                         menu.add(createAddMenu((DirectoryNode)node));
+                        menu.add(createPasteAction(directory));
                     } else {
                         menu.add(ActionHelper.createAction("Open", () -> openFileEditor((FileNode)node)));
                     }
                     
+                    menu.add(ActionHelper.createAction("Copy", () -> copiedFilePath = getPathExcludingRoot(node)));
                     menu.add(ActionHelper.createAction("Remove", () -> showRemoveDialog(node)));
                     menu.add(ActionHelper.createAction("Rename", () -> fileTree.startEditingAtPath(path)));
                     menu.addSeparator();
@@ -263,6 +267,24 @@ public class MainView {
                     fileTree.setSelectionPath(path);
                 }));
                 return menu;
+            }
+            
+            private Action createPasteAction(DirectoryNode directory) {
+                Action action = ActionHelper.createAction("Paste", () -> {
+                    FileSystemNode node = rootNode.getNode(copiedFilePath);
+                    
+                    if(node == null) {
+                        OptionPane.showMessageDialog("Item is no longer located at '" + copiedFilePath + "'");
+                        copiedFilePath = null;
+                        return;
+                    }
+                    
+                    fileTreeModel.add(directory, node.copy());
+                    copiedFilePath = null;
+                });
+                
+                action.setEnabled(copiedFilePath != null);
+                return action;
             }
         });
         

@@ -4,8 +4,8 @@ import java.io.File;
 
 public abstract class FileSystemNode {
     
-    private String name;
-    private DirectoryNode parent;
+    protected String name;
+    protected DirectoryNode parent;
     
     public FileSystemNode(String name) {
         setName(name);
@@ -15,6 +15,7 @@ public abstract class FileSystemNode {
         return name != null && !name.isEmpty() && name.equals(new File(name).getName()); // Cheesy, but eh, it works.
     }
     
+    public abstract FileSystemNode copy();
     public abstract boolean isDirectory();
     
     @Override

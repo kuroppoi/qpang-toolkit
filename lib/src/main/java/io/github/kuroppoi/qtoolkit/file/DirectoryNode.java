@@ -9,11 +9,21 @@ import io.github.kuroppoi.qtoolkit.utils.ListUtils;
 public class DirectoryNode extends FileSystemNode {
     
     private static final String pathSeparatorRegex = "\\\\|/";
-    private final List<FileSystemNode> children;
+    private final List<FileSystemNode> children = new ArrayList<>();
     
     public DirectoryNode(String name) {
         super(name);
-        this.children = new ArrayList<>();
+    }
+    
+    @Override
+    public DirectoryNode copy() {
+        DirectoryNode copy = new DirectoryNode(name);
+        
+        for(FileSystemNode child : children) {
+            copy.addChild(child.copy());
+        }
+        
+        return copy;
     }
     
     @Override
