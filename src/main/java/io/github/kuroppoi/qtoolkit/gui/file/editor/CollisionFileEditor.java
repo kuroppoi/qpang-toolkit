@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
 import de.javagl.obj.Obj;
@@ -136,7 +137,7 @@ public class CollisionFileEditor extends FileEditor implements TreeModelListener
             TreePath path = treeModel.getPath(collision);
             tree.scrollPathToVisible(path);
             tree.setSelectionPath(path);
-        });
+        }, new FileNameExtensionFilter("Wavefront (.obj)", "obj"));
     }
     
     private void showExportObjDialog(Collision collision) {
@@ -144,7 +145,7 @@ public class CollisionFileEditor extends FileEditor implements TreeModelListener
             FileOutputStream outputStream = new FileOutputStream(file);
             ObjWriter.write(CollisionConverter.convertCollisionToObj(collision), outputStream);
             outputStream.close();
-        });
+        }, new FileNameExtensionFilter("Wavefront (.obj)", "obj"));
     }
     
     private void showRemoveDialog(Collision collision) {

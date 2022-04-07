@@ -41,6 +41,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeModelEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
 import com.formdev.flatlaf.extras.components.FlatTabbedPane;
@@ -450,7 +451,7 @@ public class MainView {
             DirectoryNode node = PackReader.readPackFile(file);
             node.setName(file.getName());
             fileTreeModel.add(node);
-        });
+        }, new FileNameExtensionFilter("Pack File (.pack)", "pack"));
     }
     
     private void openPkgFile() {
@@ -458,7 +459,7 @@ public class MainView {
             DirectoryNode node = PkgReader.readPkgFile(file);
             node.setName(file.getName());
             fileTreeModel.add(node);
-        });
+        }, new FileNameExtensionFilter("Pkg File (.pkg)", "pkg"));
     }
     
     private void exportRawFile(FileSystemNode node) {
@@ -466,11 +467,13 @@ public class MainView {
     }
     
     private void exportPackFile(DirectoryNode node) {
-        FileChooser.showFileExportDialog(JFileChooser.FILES_ONLY, file -> PackWriter.writePackFile(node, file));
+        FileChooser.showFileExportDialog(JFileChooser.FILES_ONLY, file -> PackWriter.writePackFile(node, file),
+                new FileNameExtensionFilter("Pack File (.pack)", "pack"));
     }
     
     private void exportPkgFile(DirectoryNode node) {
-        FileChooser.showFileExportDialog(JFileChooser.FILES_ONLY, file -> PkgWriter.writePkgFile(node, file));
+        FileChooser.showFileExportDialog(JFileChooser.FILES_ONLY, file -> PkgWriter.writePkgFile(node, file),
+                new FileNameExtensionFilter("Pkg File (.pack)", "pkg"));
     }
     
     // TODO handle save errors

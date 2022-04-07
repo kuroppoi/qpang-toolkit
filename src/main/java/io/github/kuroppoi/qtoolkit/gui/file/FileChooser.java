@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 // TODO better display error info?
 public class FileChooser {
@@ -14,10 +16,15 @@ public class FileChooser {
     private static File lastDir = new File(".");
     private static Component defaultComponent = null;
     
-    public static void showFileOpenDialog(int selectionMode, FileChooserCallback callback) {
+    public static void showFileOpenDialog(int selectionMode, FileChooserCallback callback, FileFilter... filters) {
         JFileChooser fileChooser = new JFileChooser(lastDir);
         fileChooser.setFileSelectionMode(selectionMode);
         fileChooser.setMultiSelectionEnabled(true);
+        
+        for(FileFilter filter : filters) {
+            fileChooser.setFileFilter(filter);
+        }
+        
         List<String> errors = new ArrayList<>();
         
         if(fileChooser.showOpenDialog(defaultComponent) == JFileChooser.APPROVE_OPTION) {
@@ -45,13 +52,27 @@ public class FileChooser {
         }
     }
     
-    public static void showFileExportDialog(int selectionMode, FileChooserCallback callback) {
+    public static void showFileExportDialog(int selectionMode, FileChooserCallback callback, FileFilter... filters) {
         JFileChooser fileChooser = new JFileChooser(lastDir);
         fileChooser.setFileSelectionMode(selectionMode);
+        
+        for(FileFilter filter : filters) {
+            fileChooser.setFileFilter(filter);
+        }
         
         if(fileChooser.showSaveDialog(defaultComponent) == JFileChooser.APPROVE_OPTION) {
             lastDir = fileChooser.getCurrentDirectory();
             File file = fileChooser.getSelectedFile();
+            FileFilter filter = fileChooser.getFileFilter();
+            
+            // Add file extension of the current filter if there is none
+            if(filter instanceof FileNameExtensionFilter && file.getName().indexOf('.') == -1) {
+                String[] extensions = ((FileNameExtensionFilter)filter).getExtensions();
+                
+                if(extensions.length == 1) {
+                    file = new File(file.getAbsolutePath() + '.' + extensions[0]);
+                }
+            }
             
             try {
                 callback.handle(file);
