@@ -4,10 +4,7 @@ on:
     branches: [ master ]
     paths:
       - .github/workflows/gradle.yml
-      - conf/**
-      - pack/**
-      - pkg/**
-      - shared/**
+      - lib/**
       - src/**
       - build.gradle
 jobs:
