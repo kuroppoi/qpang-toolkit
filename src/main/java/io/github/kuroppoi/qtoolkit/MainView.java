@@ -54,7 +54,6 @@ import io.github.kuroppoi.qtoolkit.file.editor.FileEditor;
 import io.github.kuroppoi.qtoolkit.file.editor.MeshFileEditor;
 import io.github.kuroppoi.qtoolkit.file.editor.TextFileEditor;
 import io.github.kuroppoi.qtoolkit.file.editor.UnknownFileEditor;
-import io.github.kuroppoi.qtoolkit.icons.CurvedArrowIcon;
 import io.github.kuroppoi.qtoolkit.pack.PackReader;
 import io.github.kuroppoi.qtoolkit.pack.PackWriter;
 import io.github.kuroppoi.qtoolkit.pack.collision.CollisionReader;
@@ -72,9 +71,9 @@ public class MainView {
     
     private static final Icon floppyDriveIcon = UIManager.getIcon("QToolkit.floppyDriveIcon");
     private static final Icon doubleFloppyDriveIcon = UIManager.getIcon("QToolkit.doubleFloppyDriveIcon");
+    private static final Icon curvedArrowIcon = UIManager.getIcon("QToolkit.curvedArrowIcon");
     private static final Icon fileIcon = UIManager.getIcon("FileView.fileIcon");
     private static final Icon directoryIcon = UIManager.getIcon("FileView.directoryIcon");
-    private static final Icon curvedArrowIcon = new CurvedArrowIcon();
     private final Action saveAction = ActionHelper.createAction("Save (Ctrl + S)", floppyDriveIcon, this::saveCurrentFile);
     private final Action saveAllAction = ActionHelper.createAction("Save All (Ctrl + Shift + S)", doubleFloppyDriveIcon, this::saveAllFiles);
     private final Action undoAction = ActionHelper.createAction("Undo (Ctrl + Z)", curvedArrowIcon, this::undo);
