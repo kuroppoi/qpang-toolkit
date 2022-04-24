@@ -38,8 +38,9 @@ public class LineNumbers extends JComponent implements DocumentListener {
         FontMetrics metrics = textArea.getFontMetrics(textArea.getFont());
         Insets insets = getInsets();
         int availableWidth = getWidth() - insets.left - insets.right;
-        int start = textArea.viewToModel(new Point(0, -textArea.getY()));
-        int end = textArea.viewToModel(new Point(0, -textArea.getY() + textArea.getHeight()));
+        Rectangle clipBounds = g2d.getClipBounds();
+        int start = textArea.viewToModel(new Point(0, clipBounds.y));
+        int end = textArea.viewToModel(new Point(0, clipBounds.y + clipBounds.height));
         
         while(start <= end) {
             Element root = textArea.getDocument().getDefaultRootElement();
