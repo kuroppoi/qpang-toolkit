@@ -55,6 +55,7 @@ import io.github.kuroppoi.qtoolkit.gui.event.TreeModelAdapter;
 import io.github.kuroppoi.qtoolkit.gui.file.FileChooser;
 import io.github.kuroppoi.qtoolkit.gui.file.FileType;
 import io.github.kuroppoi.qtoolkit.gui.file.editor.CollisionFileEditor;
+import io.github.kuroppoi.qtoolkit.gui.file.editor.ConfigFileEditor;
 import io.github.kuroppoi.qtoolkit.gui.file.editor.FileEditor;
 import io.github.kuroppoi.qtoolkit.gui.file.editor.MeshFileEditor;
 import io.github.kuroppoi.qtoolkit.gui.file.editor.TextFileEditor;
@@ -379,6 +380,7 @@ public class MainView {
                     case TEXT: editor = new TextFileEditor(file, this::refreshToolbar); break; 
                     case MESH: editor = new MeshFileEditor(file, MeshReader.readMeshFile(file), this::refreshToolbar); break;
                     case COLLISION: editor = new CollisionFileEditor(file, CollisionReader.readCollisionFile(file), this::refreshToolbar); break;
+                    case CONFIG: editor = new ConfigFileEditor(file, this::refreshToolbar); break;
                     default: editor = new UnknownFileEditor(); break;
                 }
             } catch(IOException e) {

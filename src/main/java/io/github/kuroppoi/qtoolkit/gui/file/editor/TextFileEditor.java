@@ -19,19 +19,20 @@ import io.github.kuroppoi.qtoolkit.file.FileNode;
 import io.github.kuroppoi.qtoolkit.gui.component.LineNumbers;
 import io.github.kuroppoi.qtoolkit.gui.utils.ActionHelper;
 
+// TODO can this be generalized somehow?
 public class TextFileEditor extends FileEditor implements DocumentListener, UndoableEditListener {
     
-    private final FileNode file;
-    private final Runnable changeListener;
-    private final JScrollPane scrollPane;
-    private final JTextArea textArea;
+    protected final FileNode file;
+    protected final Runnable changeListener;
+    protected final JScrollPane scrollPane;
+    protected final JTextArea textArea;
     
     public TextFileEditor(FileNode file, Runnable changeListener) {
         this.file = file;
         this.changeListener = changeListener;
         
         // Text area
-        textArea = new JTextArea(new String(file.getBytes(), StandardCharsets.UTF_8));
+        textArea = new JTextArea(loadText());
         textArea.setFont(new Font("Consolas", Font.PLAIN, 12));
         textArea.setTabSize(4);
         textArea.getDocument().addDocumentListener(this);
@@ -87,5 +88,9 @@ public class TextFileEditor extends FileEditor implements DocumentListener, Undo
     public void undoableEditHappened(UndoableEditEvent event) {
         undoManager.addEdit(event.getEdit());
         changeListener.run();
+    }
+    
+    protected String loadText() {
+        return new String(file.getBytes(), StandardCharsets.UTF_8);
     }
 }

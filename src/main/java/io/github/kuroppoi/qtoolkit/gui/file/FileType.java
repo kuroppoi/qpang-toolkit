@@ -11,6 +11,7 @@ public enum FileType {
     MESH,
     ANIMATION,
     COLLISION,
+    CONFIG,
     UNKNOWN;
     
     public static FileType determineFileType(FileNode file) {
@@ -21,6 +22,21 @@ public enum FileType {
         for(byte b : bytes) {
             if(b >= 9) {
                 asciiCount++;
+            }
+        }
+        
+        if(name.endsWith(".conf") || name.endsWith(".dat")) {
+            boolean valid = true;
+            
+            for(String line : file.getLines()) {
+                if(line.length() % 4 != 0) {
+                    valid = false;
+                    break;
+                }
+            }
+            
+            if(valid) {
+                return CONFIG;
             }
         }
         
