@@ -3,13 +3,14 @@ package io.github.kuroppoi.qtoolkit.conf;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class ConfCryptography {
     
-    public static byte[] decryptBytes(byte[] bytes) {
+    private static byte[] decryptBytes(byte[] bytes) {
         int length = bytes.length;
         
         if(length % 4 != 0) {
@@ -25,7 +26,7 @@ public class ConfCryptography {
         return output;
     }
     
-    public static byte[] encryptBytes(byte[] bytes) {
+    private static byte[] encryptBytes(byte[] bytes) {
         byte[] output = new byte[bytes.length * 4];
         
         for(int i = 0; i < bytes.length; i++) {
@@ -39,36 +40,47 @@ public class ConfCryptography {
         return output;
     }
     
-    public static String decryptString(String string) {
-        return new String(decryptBytes(string.getBytes(ISO_8859_1)), UTF_8);
-    }
-    
-    public static String encryptString(String string) {
-        return new String(encryptBytes(string.getBytes(UTF_8)), ISO_8859_1);
+    private static String decryptLine(String string) {
+        return new String(decryptBytes(string.getBytes(ISO_8859_1)), UTF_8).replaceAll("\n|\r\n", "");
     }
     
     public static List<String> decryptLines(List<String> lines) {
-        List<String> decrypted = new ArrayList<>();
+        return lines.stream().map(ConfCryptography::decryptLine).collect(Collectors.toList());
+    }
         
-        for(String string : lines) {
-            decrypted.add(decryptString(string));
-        }
-        
-        return decrypted;
+    public static String decryptLinesAsString(List<String> lines) {
+        return joinLines(decryptLines(lines));
+    }
+    
+    public static List<String> decryptStringAsLines(String string) {
+        return decryptLines(Arrays.asList(string.split("\n|\r\n")));
+    }
+    
+    public static String decryptString(String string) {
+        return joinLines(decryptStringAsLines(string));
+    }
+    
+    private static String encryptLine(String string) {
+        return new String(encryptBytes((string + "\n").getBytes(UTF_8)), ISO_8859_1);
     }
     
     public static List<String> encryptLines(List<String> lines) {
-        return encryptLines(lines, true);
+        return lines.stream().map(ConfCryptography::encryptLine).collect(Collectors.toList());
     }
     
-    public static List<String> encryptLines(List<String> lines, boolean addLineFeed) {
-        List<String> encrypted = new ArrayList<>();
-        
-        for(String string : lines) {
-            string = addLineFeed && string.endsWith("\n") ? string + "\n" : string;
-            encrypted.add(encryptString(string));
-        }
-        
-        return encrypted;
+    public static String encryptLinesAsString(List<String> lines) {
+        return joinLines(encryptLines(lines));
+    }
+    
+    public static List<String> encryptStringAsLines(String string) {
+        return encryptLines(Arrays.asList(string.split("\n|\r\n")));
+    }
+    
+    public static String encryptString(String string) {
+        return joinLines(encryptStringAsLines(string));
+    }
+    
+    private static String joinLines(List<String> lines) {
+        return String.join("\r\n", lines);
     }
 }
