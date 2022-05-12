@@ -4,6 +4,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -134,11 +136,26 @@ public class MeshFileEditor extends FileEditor implements TreeModelListener {
             FileInputStream inputStream = new FileInputStream(file);
             Obj obj = ObjReader.read(inputStream);
             inputStream.close();
-            Mesh mesh = MeshConverter.convertObjToMesh(obj, file.getName());
-            treeModel.add(mesh);
-            TreePath path = treeModel.getPath(mesh);
-            tree.scrollPathToVisible(path);
-            tree.setSelectionPath(path);
+            
+            if(obj.getNumGroups() > 1) {
+                MeshFile meshFile = MeshConverter.convertObjToMeshFile(obj);
+                List<Mesh> meshes = new ArrayList<>(meshFile.getMeshes());
+                List<TreePath> selectionPaths = new ArrayList<>();
+                
+                for(Mesh mesh : meshes) {
+                    treeModel.add(mesh);
+                    selectionPaths.add(treeModel.getPath(mesh));
+                }
+                
+                tree.scrollPathToVisible(selectionPaths.get(0));
+                tree.setSelectionPaths(selectionPaths.toArray(new TreePath[0]));
+            } else {
+                Mesh mesh = MeshConverter.convertObjToMesh(obj, file.getName());
+                treeModel.add(mesh);
+                TreePath path = treeModel.getPath(mesh);
+                tree.scrollPathToVisible(path);
+                tree.setSelectionPath(path);
+            }
         }, new FileNameExtensionFilter("Wavefront (.obj)", "obj"));
     }
     
