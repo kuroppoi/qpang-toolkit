@@ -67,8 +67,12 @@ import io.github.kuroppoi.qtoolkit.gui.tree.FileSystemTreeModel;
 import io.github.kuroppoi.qtoolkit.gui.utils.ActionHelper;
 import io.github.kuroppoi.qtoolkit.pack.PackReader;
 import io.github.kuroppoi.qtoolkit.pack.PackWriter;
+import io.github.kuroppoi.qtoolkit.pack.collision.CollisionFile;
 import io.github.kuroppoi.qtoolkit.pack.collision.CollisionReader;
+import io.github.kuroppoi.qtoolkit.pack.collision.CollisionWriter;
+import io.github.kuroppoi.qtoolkit.pack.mesh.MeshFile;
 import io.github.kuroppoi.qtoolkit.pack.mesh.MeshReader;
+import io.github.kuroppoi.qtoolkit.pack.mesh.MeshWriter;
 import io.github.kuroppoi.qtoolkit.pkg.PkgReader;
 import io.github.kuroppoi.qtoolkit.pkg.PkgWriter;
 
@@ -79,6 +83,8 @@ public class MainView {
     private static final Icon curvedArrowIcon = UIManager.getIcon("QToolkit.curvedArrowIcon");
     private static final Icon fileIcon = UIManager.getIcon("FileView.fileIcon");
     private static final Icon directoryIcon = UIManager.getIcon("FileView.directoryIcon");
+    private static final Icon meshIcon = UIManager.getIcon("QToolkit.meshIcon");
+    private static final Icon collisionIcon = UIManager.getIcon("QToolkit.collisionIcon");
     private static final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     private final Action saveAction = ActionHelper.createAction("Save (Ctrl + S)", floppyDriveIcon, this::saveCurrentFile);
     private final Action saveAllAction = ActionHelper.createAction("Save All (Ctrl + Shift + S)", doubleFloppyDriveIcon, this::saveAllFiles);
@@ -263,14 +269,26 @@ public class MainView {
             
             private JMenu createAddMenu(DirectoryNode directory) {
                 JMenu menu = new JMenu("Add");
-                menu.add(ActionHelper.createAction("File", fileIcon, () -> {
+                JMenu fileMenu = new JMenu("File");
+                fileMenu.setIcon(fileIcon);
+                fileMenu.add(ActionHelper.createAction("Text File", () -> {
                     FileNode file = fileTreeModel.createFile(directory);
-                    TreePath path = fileTreeModel.getPath(file);
-                    fileTree.scrollPathToVisible(path);
-                    fileTree.setSelectionPath(path);
-                    openFileEditor(file);
+                    selectFile(file);
                 }));
                 
+                fileMenu.add(ActionHelper.createAction("Mesh File", meshIcon, () -> {
+                    FileNode file = fileTreeModel.createFile(directory);
+                    MeshWriter.writeMeshFile(new MeshFile(), file);
+                    selectFile(file);
+                }));
+                
+                fileMenu.add(ActionHelper.createAction("Collision File", collisionIcon, () -> {
+                    FileNode file = fileTreeModel.createFile(directory);
+                    CollisionWriter.writeCollisionFile(new CollisionFile(), file);
+                    selectFile(file);
+                }));
+                
+                menu.add(fileMenu);
                 menu.add(ActionHelper.createAction("Folder", directoryIcon, () -> {
                     TreePath path = fileTreeModel.getPath(fileTreeModel.createDirectory(directory));
                     fileTree.scrollPathToVisible(path);
@@ -375,6 +393,13 @@ public class MainView {
         saveAction.setEnabled(editor.hasUnsavedChanges());
         undoAction.setEnabled(editor.hasUndoableAction());
         redoAction.setEnabled(editor.hasRedoableAction());
+    }
+    
+    private void selectFile(FileNode file) {
+        TreePath path = fileTreeModel.getPath(file);
+        fileTree.scrollPathToVisible(path);
+        fileTree.setSelectionPath(path);
+        openFileEditor(file);
     }
     
     private void openFileEditor(FileNode file) {
