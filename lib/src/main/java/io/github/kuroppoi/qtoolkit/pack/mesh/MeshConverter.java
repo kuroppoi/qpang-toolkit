@@ -137,7 +137,8 @@ public class MeshConverter {
     
     public static Mesh convertObjToMesh(Obj obj, String name) {
         Mesh mesh = new Mesh(name);
-        Map<String, Obj> groups = ObjSplitting.splitByMaterialGroups(ObjUtils.convertToRenderable(obj));
+        obj = ObjUtils.convertToRenderable(obj);
+        Map<String, Obj> groups = ObjSplitting.splitByMaterialGroups(obj);
         
         // Obj parser limitation? This sometimes happens, sadly
         if(groups.isEmpty()) {
