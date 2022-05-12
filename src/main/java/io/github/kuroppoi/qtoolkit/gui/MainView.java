@@ -3,6 +3,9 @@ package io.github.kuroppoi.qtoolkit.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -76,6 +79,7 @@ public class MainView {
     private static final Icon curvedArrowIcon = UIManager.getIcon("QToolkit.curvedArrowIcon");
     private static final Icon fileIcon = UIManager.getIcon("FileView.fileIcon");
     private static final Icon directoryIcon = UIManager.getIcon("FileView.directoryIcon");
+    private static final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     private final Action saveAction = ActionHelper.createAction("Save (Ctrl + S)", floppyDriveIcon, this::saveCurrentFile);
     private final Action saveAllAction = ActionHelper.createAction("Save All (Ctrl + Shift + S)", doubleFloppyDriveIcon, this::saveAllFiles);
     private final Action undoAction = ActionHelper.createAction("Undo (Ctrl + Z)", curvedArrowIcon, this::undo);
@@ -244,7 +248,11 @@ public class MainView {
                         menu.add(ActionHelper.createAction("Open", () -> openFileEditor((FileNode)node)));
                     }
                     
-                    menu.add(ActionHelper.createAction("Copy", () -> copiedFilePath = getPathExcludingRoot(node)));
+                    JMenu copyMenu = new JMenu("Copy");
+                    copyMenu.add(ActionHelper.createAction("File", () -> copiedFilePath = getPathExcludingRoot(node)));
+                    copyMenu.add(ActionHelper.createAction("Name", () -> clipboard.setContents(new StringSelection(node.getName()), null)));
+                    copyMenu.add(ActionHelper.createAction("Path", () -> clipboard.setContents(new StringSelection(getPathExcludingRoot(node)), null)));
+                    menu.add(copyMenu);
                     menu.add(ActionHelper.createAction("Remove", () -> showRemoveDialog(node)));
                     menu.add(ActionHelper.createAction("Rename", () -> fileTree.startEditingAtPath(path)));
                     menu.addSeparator();
