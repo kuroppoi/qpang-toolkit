@@ -63,7 +63,10 @@ public class CollisionFileEditor extends FileEditor implements TreeModelListener
                         JPopupMenu menu = new JPopupMenu();
                         JMenu importMenu = new JMenu("Import");
                         importMenu.add(ActionHelper.createAction("Wavefront (.obj)", CollisionFileEditor.this::showImportObjDialog));
+                        JMenu exportMenu = new JMenu("Export All");
+                        exportMenu.add(ActionHelper.createAction("Wavefront (.obj)", CollisionFileEditor.this::showExportAllObjDialog));
                         menu.add(importMenu);
+                        menu.add(exportMenu);
                         menu.show(tree, event.getX(), event.getY());
                         return;
                     }
@@ -137,6 +140,14 @@ public class CollisionFileEditor extends FileEditor implements TreeModelListener
             TreePath path = treeModel.getPath(collision);
             tree.scrollPathToVisible(path);
             tree.setSelectionPath(path);
+        }, new FileNameExtensionFilter("Wavefront (.obj)", "obj"));
+    }
+    
+    private void showExportAllObjDialog() {
+        FileChooser.showFileExportDialog(JFileChooser.FILES_ONLY, file -> {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            ObjWriter.write(CollisionConverter.convertCollisionFileToObj(collisionFile), outputStream);
+            outputStream.close();
         }, new FileNameExtensionFilter("Wavefront (.obj)", "obj"));
     }
     
