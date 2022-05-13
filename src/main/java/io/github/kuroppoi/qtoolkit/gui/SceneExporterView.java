@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -35,12 +36,17 @@ import io.github.kuroppoi.qtoolkit.pack.scene.SceneParser;
 
 public class SceneExporterView {
     
+    private static final String[] formatOptions = {
+        "Wavefront (.obj)"
+    };
+    
     private final JDialog dialog;
     private final DirectoryNode rootNode;
     private JTextField scenePathField;
     private JTextField meshPathField;
     private JTextField materialPathField;
     private JTextField texturePathField;
+    private JComboBox<String> formatComboBox;
     
     public SceneExporterView(Component component, DirectoryNode rootNode) {
         this(component, rootNode, null, null, null, null);
@@ -66,11 +72,12 @@ public class SceneExporterView {
         }
         
         // Info Section
-        JLabel infoLabel = new JLabel("<html>Note: Lightmaps and vertex colors are lost when converting to certain formats.<br>"
+        JLabel infoLabel = new JLabel("<html>Note: Lightmaps, vertex colors & scene transformations are lost when converting to certain formats.<br>"
                 + " If you wish to modify a scene that uses these, it is best to reimport modified objects separately.<br>"
                 + "<br>"
-                + "To export a scene, enter valid scene, mesh, material & texture paths and press 'Export'.<br>"
-                + "Make sure the paths are in-memory!<br>"
+                + "To export a scene, enter valid scene, mesh, material & texture paths, choose an output format<br>"
+                + "and press 'Export Scene'. Make sure the paths are in-memory!<br>"
+                + "<br>"
                 + "The scene exporter is still experimental. Things may not always go exactly right!</html>");
         
         JPanel infoPanel = new JPanel();
@@ -80,7 +87,7 @@ public class SceneExporterView {
         // Export Button
         JButton exportButton = new JButton("Export Scene");
         exportButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        exportButton.addActionListener(event -> exportScene());
+        exportButton.addActionListener(event -> showExportDialog());
         
         // Main Panel
         JPanel panel = new JPanel(new BorderLayout());
@@ -99,7 +106,7 @@ public class SceneExporterView {
         dialog.setVisible(true);
     }
         
-    private void exportScene() {
+    private void showExportDialog() {
         String scenePath = scenePathField.getText();
         String meshPath = meshPathField.getText();
         String materialPath = materialPathField.getText();
@@ -110,17 +117,23 @@ public class SceneExporterView {
             return;
         }
         
-        FileNode sceneFileNode = rootNode.getFile(scenePath);
-        FileNode meshFileNode = rootNode.getFile(meshPath);
-        FileNode materialFileNode = rootNode.getFile(materialPath);
-        DirectoryNode textureNode = rootNode.getDirectory(texturePath);
+        FileNode sceneFile = rootNode.getFile(scenePath);
+        FileNode meshFile = rootNode.getFile(meshPath);
+        FileNode materialFile = rootNode.getFile(materialPath);
+        DirectoryNode textureDirectory = rootNode.getDirectory(texturePath);
         
-        if(sceneFileNode == null || meshFileNode == null || materialFileNode == null || textureNode == null) {
+        if(sceneFile == null || meshFile == null || materialFile == null || textureDirectory == null) {
             OptionPane.showMessageDialog(String.format("No file exists at path '%s'",
-                    sceneFileNode == null ? scenePath : meshFileNode == null ? meshPath : materialFileNode == null ? materialPath : texturePath));
+                    sceneFile == null ? scenePath : meshFile == null ? meshPath : materialFile == null ? materialPath : texturePath));
             return;
         }
         
+        switch(formatComboBox.getSelectedIndex()) {
+            case 0: showExportObjDialog(sceneFile, meshFile, materialFile, textureDirectory); break;
+        }
+    }
+    
+    private void showExportObjDialog(FileNode sceneFileNode, FileNode meshFileNode, FileNode materialFileNode, DirectoryNode textureDirectory) {
         FileChooser.showFileExportDialog(JFileChooser.DIRECTORIES_ONLY, directory -> {
             directory.mkdirs();
             SceneFile sceneFile = SceneParser.parseSceneFile(sceneFileNode);
@@ -133,7 +146,7 @@ public class SceneExporterView {
             outputStream = new FileOutputStream(new File(directory, name + ".mtl"));
             MtlWriter.write(MaterialConverter.convertMaterialFileToMtlList(materialFile), outputStream);
             outputStream.close();
-            FileSystems.writeFileSystem(textureNode, new File(directory, textureNode.getName()));
+            FileSystems.writeFileSystem(textureDirectory, new File(directory, textureDirectory.getName()));
         });
     }
     
@@ -160,14 +173,14 @@ public class SceneExporterView {
         formPanel.add(new JLabel("Mesh File", JLabel.TRAILING), constraints(1, 0, 1, 1, 0, 1));
         formPanel.add(new JLabel("Material File", JLabel.TRAILING), constraints(2, 0, 1, 1, 0, 1));
         formPanel.add(new JLabel("Texture Folder", JLabel.TRAILING), constraints(3, 0, 1, 1, 0, 1));
-        
-        // TODO output format option
+        formPanel.add(new JLabel("Output Format", JLabel.TRAILING), constraints(4, 0, 1, 1, 0, 1));
         
         // Fields
         formPanel.add(scenePathField = new JTextField(scenePath, 25), constraints(0, 1, 1, 1, 1, 1));
         formPanel.add(meshPathField = new JTextField(meshPath, 25), constraints(1, 1, 1, 1, 1, 1));
         formPanel.add(materialPathField = new JTextField(materialPath, 25), constraints(2, 1, 1, 1, 1, 1));
         formPanel.add(texturePathField = new JTextField(texturePath, 25), constraints(3, 1, 1, 1, 1, 1));
+        formPanel.add(formatComboBox = new JComboBox<>(formatOptions), constraints(4, 1, 1, 1, 1, 1));
         return formPanel;
     }
 }
