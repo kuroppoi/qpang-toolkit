@@ -94,7 +94,7 @@ public class SceneExporterView {
         dialog = new JDialog(owner, "Scene Exporter");
         dialog.add(panel);
         dialog.pack();
-        dialog.setLocationRelativeTo(null);
+        dialog.setLocationRelativeTo(owner);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setVisible(true);
     }
