@@ -1,5 +1,6 @@
 package io.github.kuroppoi.qtoolkit.gui.file.editor;
 
+import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
@@ -23,8 +24,10 @@ import javax.swing.tree.TreePath;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
 import de.javagl.obj.ObjWriter;
+import io.github.kuroppoi.qtoolkit.file.DirectoryNode;
 import io.github.kuroppoi.qtoolkit.file.FileNode;
 import io.github.kuroppoi.qtoolkit.gui.OptionPane;
+import io.github.kuroppoi.qtoolkit.gui.SceneExporterView;
 import io.github.kuroppoi.qtoolkit.gui.event.SimpleRenameFailListener;
 import io.github.kuroppoi.qtoolkit.gui.event.TreeRemoveUndo;
 import io.github.kuroppoi.qtoolkit.gui.file.FileChooser;
@@ -66,6 +69,7 @@ public class MeshFileEditor extends FileEditor implements TreeModelListener {
                         JMenu importMenu = new JMenu("Import");
                         importMenu.add(ActionHelper.createAction("Wavefront (.obj)", MeshFileEditor.this::showImportObjDialog));
                         menu.add(importMenu);
+                        menu.add(ActionHelper.createAction("Export Scene", MeshFileEditor.this::showSceneExporter));
                         menu.show(tree, event.getX(), event.getY());
                         return;
                     }
@@ -165,6 +169,39 @@ public class MeshFileEditor extends FileEditor implements TreeModelListener {
             ObjWriter.write(MeshConverter.convertMeshToObj(mesh), outputStream);
             outputStream.close();
         }, new FileNameExtensionFilter("Wavefront (.obj)", "obj"));
+    }
+    
+    private void showSceneExporter() {
+        if(hasUnsavedChanges) {
+            OptionPane.showMessageDialog("This file has unsaved changes.\n"
+                    + "If you want the exported scene to reflect these, please save them before using the scene exporter.");
+        }
+        
+        if(!file.getParent().hasParent()) {
+            OptionPane.showMessageDialog("Couldn't auto-detect file paths. Please enter them manually.");
+        }
+        
+        DirectoryNode packRootNode = file.getParent().getParent();
+        DirectoryNode rootNode = file.getRoot();
+        String meshPath = file.getPath("/").substring(rootNode.getName().length() + 1);
+        
+        if(packRootNode == null) {
+            new SceneExporterView((Frame)SwingUtilities.getRoot(tree), rootNode, null, meshPath, null, null);
+        } else {
+            String rootPath = packRootNode.getPath("/");
+            
+            if(packRootNode == rootNode) {
+                rootPath = rootPath.substring(rootNode.getName().length());
+            } else {
+                rootPath = rootPath.substring(rootPath.indexOf('/') + 1) + "/";
+            }
+            
+            String name = file.getName().replace(".mesh", "");
+            String scenePath = String.format("%sscene/%s.scene", rootPath, name);
+            String materialPath = String.format("%smaterial/%s.material", rootPath, name);
+            String texturePath = String.format("%stexture", rootPath);
+            new SceneExporterView((Frame)SwingUtilities.getRoot(tree), rootNode, scenePath, meshPath, materialPath, texturePath);
+        }
     }
     
     private void showRemoveDialog(Mesh mesh) {

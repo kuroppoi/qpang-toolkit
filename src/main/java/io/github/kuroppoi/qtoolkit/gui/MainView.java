@@ -133,12 +133,15 @@ public class MainView {
         fileMenu.add(fileOpenMenu);
         fileMenu.addSeparator();
         fileMenu.add(ActionHelper.createAction("Exit", () -> System.exit(0)));
+        JMenu toolsMenu = new JMenu("Tools");
+        toolsMenu.add(ActionHelper.createAction("Scene Exporter", () -> new SceneExporterView(frame, rootNode)));
         
         // TODO other menus
         
         // Menu bar
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(fileMenu);
+        menuBar.add(toolsMenu);
         return menuBar;
     }
     

@@ -23,6 +23,20 @@ public abstract class FileSystemNode {
         return name;
     }
     
+    public DirectoryNode getRoot() {
+        if(!hasParent()) {
+            return null;
+        }
+        
+        DirectoryNode parent = getParent();
+        
+        while(parent.hasParent()) {
+            parent = parent.getParent();
+        }
+        
+        return parent;
+    }
+    
     public String getPath() {
         return getPath(File.separator);
     }
